@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: piranya-landing
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn app:app
+    region: frankfurt
+    plan: free
+    branch: main
+    repo: https://github.com/Robert4386/piranya_landing
+    autoDeploy: true
