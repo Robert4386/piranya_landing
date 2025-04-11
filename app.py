@@ -5,6 +5,7 @@ import re
 from dateutil import parser as date_parser
 import locale
 import os
+import time
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
@@ -12,6 +13,11 @@ app = Flask(__name__)
 # Конфигурация
 BACKGROUNDS_FOLDER = 'static/backgrounds'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+CACHE_TTL = 600  # 10 минут
+cache = {
+    "news": {"data": [], "timestamp": 0},
+    "articles": {"data": [], "timestamp": 0}
+}
 
 # Устанавливаем русскую локаль
 try:
@@ -20,7 +26,7 @@ except:
     try:
         locale.setlocale(locale.LC_TIME, 'ru_RU')
     except:
-        pass  # для Windows
+        pass
 
 def get_background_image():
     if os.path.exists(BACKGROUNDS_FOLDER):
@@ -40,6 +46,10 @@ def index():
 
 @app.route('/news')
 def get_news():
+    now = time.time()
+    if now - cache["news"]["timestamp"] < CACHE_TTL:
+        return jsonify(cache["news"]["data"])
+
     feed_url = 'https://rsshub.app/telegram/channel/piranyaz'
     try:
         response = requests.get(feed_url, timeout=10)
@@ -69,14 +79,22 @@ def get_news():
                 'date': formatted_date
             })
 
+        # Кешируем
+        cache["news"]["data"] = posts[:7]
+        cache["news"]["timestamp"] = now
+
         return jsonify(posts[:7])
 
     except Exception as e:
         print(f"Ошибка при загрузке RSS: {e}")
-        return jsonify([])
+        return jsonify(cache["news"]["data"])  # fallback
 
 @app.route('/articles')
 def get_articles():
+    now = time.time()
+    if now - cache["articles"]["timestamp"] < CACHE_TTL:
+        return jsonify(cache["articles"]["data"])
+
     feed_url = 'https://rsshub.app/telegram/channel/piranyaz'
     try:
         response = requests.get(feed_url, timeout=10)
@@ -104,11 +122,15 @@ def get_articles():
                     print(f'Ошибка при обработке статьи {link}: {e}')
                     continue
 
+        # Кешируем
+        cache["articles"]["data"] = articles
+        cache["articles"]["timestamp"] = now
+
         return jsonify(articles)
 
     except Exception as e:
         print(f"Ошибка при загрузке статей: {e}")
-        return jsonify([])
+        return jsonify(cache["articles"]["data"])  # fallback
 
 if __name__ == '__main__':
     os.makedirs(BACKGROUNDS_FOLDER, exist_ok=True)
