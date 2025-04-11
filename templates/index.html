@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Канал "Пиранья"</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1a1a1a;
+      color: #f0f0f0;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.6); /* Прозрачный тёмный фон */;
+      padding: 60px 20px 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    .logo-glow {
+      width: 140px;
+      margin-bottom: 30px;
+      animation: pulseGlow 2.5s infinite;
+      filter: drop-shadow(0 0 8px #00f) drop-shadow(0 0 12px rgb(255, 255, 255));
+      transition: transform 0.3s ease;
+    }
+
+    .logo-glow:hover {
+      transform: scale(1.1) rotate(1deg);
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        filter: drop-shadow(0 0 8px #0000ff) drop-shadow(0 0 12px #0000ff); /* Синий */
+      }
+      33% {
+        filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 12px #ffffff); /* Белый */
+      }
+      66% {
+        filter: drop-shadow(0 0 8px #ff0000) drop-shadow(0 0 12px #ff0000); /* Красный */
+      }
+      100% {
+        filter: drop-shadow(0 0 8px #0000ff) drop-shadow(0 0 12px #0000ff); /* Снова синий */
+      }
+    }
+
+    header h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid #00c3ff;
+      width: 0;
+      animation: typing 5s steps(60, end) forwards, blink 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    header p {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .cta-button {
+      background-color: #0088cc;
+      color: white;
+      padding: 15px 30px;
+      text-decoration: none;
+      font-size: 18px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .cta-button:hover {
+      background-color: #00aaff;
+    }
+
+    .main-content {
+      background-color: #1a1a1a;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      padding: 40px 0;
+    }
+
+    section {
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .content-block {
+      margin-bottom: 40px;
+    }
+
+    .content-block h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111;
+      font-size: 14px;
+      color: #888;
+    }
+
+    .swiper {
+      padding: 20px 0;
+      max-width: 1140px;
+      margin: auto;
+      position: relative;
+    }
+
+    .swiper-slide {
+      width: auto !important;
+      max-width: 280px;
+      margin-right: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .post-card {
+      background: rgba(42, 42, 42, 0.85);
+      padding: 16px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 320px;
+      overflow: hidden;
+      position: relative;
+      transition: all 0.5s ease;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .post-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg);
+    }
+
+    .post-card:hover::before {
+      animation: shine 1s ease;
+    }
+
+    @keyframes shine {
+      from { left: -75%; }
+      to { left: 125%; }
+    }
+
+    .post-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 136, 204, 0.5);
+      transform: scale(1.03);
+      z-index: 10;
+    }
+
+    .post-card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      object-fit: cover;
+      height: 160px;
+    }
+
+    .post-card h3 {
+      font-size: 16px;
+      margin: 0 0 10px;
+    }
+
+    .read-more-btn {
+      margin-top: auto;
+      background-color: #0088cc;
+      color: white;
+      padding: 8px 12px;
+      text-align: center;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .read-more-btn:hover {
+      background-color: #00aaff;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev,
+    .swiper-pagination {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="/static/logo.png" alt="Логотип Пиранья" class="logo-glow">
+    <h1>🇷🇺 Плывем сквозь новости, вгрызаемся в подробности! 🇷🇺</h1>
+    <p>🔥 Актуальные новости с фронта, аналитика, эксклюзивный контент и оперативная информация</p>
+    <a href="https://t.me/piranyaz" target="_blank" class="cta-button">Перейти в Telegram</a>
+  </header>
+
+  <main class="main-content" {% if bg_image %}style="background-image: url('/static/{{ bg_image }}')"{% endif %}>
+    <section class="content-block">
+      <h2>🗞️ Новости 🗞️</h2>
+      <div class="swiper mySwiper">
+        <div class="swiper-wrapper" id="news-container"></div>
+      </div>
+    </section>
+
+    <section class="content-block">
+      <h2>📚 Статьи за сегодня 📚</h2>
+      <div class="swiper articleSwiper">
+        <div class="swiper-wrapper" id="article-container"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Telegram-Канал "Пиранья". Все права защищены.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <script>
+    fetch('/news')
+      .then(response => response.json())
+      .then(posts => {
+        const container = document.getElementById('news-container');
+        posts.forEach(post => {
+          const slide = document.createElement('div');
+          slide.className = 'swiper-slide';
+
+          const card = document.createElement('div');
+          card.className = 'post-card';
+
+          card.innerHTML = `
+            ${post.image ? `<img src="${post.image}" alt="Изображение">` : ''}
+            <h3>${post.title}</h3>
+            <a class="read-more-btn" href="${post.link}" target="_blank">Читать далее</a>
+          `;
+
+          slide.appendChild(card);
+          container.appendChild(slide);
+        });
+
+        new Swiper(".mySwiper", {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          centeredSlides: true,
+          breakpoints: {
+            640: { slidesPerView: 1.2 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 }
+          },
+          loop: true,
+          autoplay: {
+            delay: 5000,
+            disableOnInteraction: false
+          }
+        });
+      });
+
+    fetch('/articles')
+      .then(response => response.json())
+      .then(articles => {
+        const container = document.getElementById('article-container');
+        const titles = new Set();
+
+        articles.forEach(article => {
+          if (!titles.has(article.title)) {
+            titles.add(article.title);
+
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+
+            const card = document.createElement('div');
+            card.className = 'post-card';
+
+            card.innerHTML = `
+              ${article.image ? `<img src="${article.image}" alt="Обложка">` : ''}
+              <h3>${article.title}</h3>
+              <a class="read-more-btn" href="${article.link}" target="_blank">Читать далее</a>
+            `;
+
+            slide.appendChild(card);
+            container.appendChild(slide);
+          }
+        });
+
+        new Swiper(".articleSwiper", {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          centeredSlides: true,
+          breakpoints: {
+            640: { slidesPerView: 1.2 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 }
+          },
+          loop: true,
+          autoplay: {
+            delay: 7000,
+            disableOnInteraction: false
+          }
+        });
+      });
+  </script>
+</body>
+</html>
